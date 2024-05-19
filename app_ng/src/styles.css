@@ -1,0 +1,74 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+
+  main > router-outlet + * {
+    display: block;
+  }
+
+
+  .rounded-image {
+    @apply rounded-full object-cover;
+  }
+
+  .input {
+    @apply  p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300
+  }
+
+  .form-control__error {
+    @apply text-red-500 text-sm mt-1 p-2 border border-red-500 rounded
+  }
+
+  .card--button {
+    @apply   hover:shadow-lg transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 hover:ring-2 focus:ring-indigo-500 hover:ring-indigo-500
+  }
+
+  .card {
+    @apply flex flex-col items-center p-4 bg-white rounded shadow;
+  }
+
+  .btn--primary {
+    @apply bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-4 py-2 rounded shadow-lg transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500;
+  }
+
+  .link {
+    @apply text-indigo-500 hover:underline cursor-pointer
+  }
+
+
+    /* Toggle Switch */
+.switch {
+  @apply relative inline-flex items-center cursor-pointer;
+}
+
+.switch input {
+  @apply sr-only;
+}
+
+.slider {
+  @apply w-11 h-6 bg-gray-300 rounded-full transition-colors duration-200 ease-in-out;
+}
+
+.slider::before {
+  @apply absolute left-0 w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 ease-in-out;
+  content: '';
+  top: 0.15rem;
+  left: 0.2rem;
+}
+
+input:checked + .slider {
+  @apply bg-gradient-to-r from-indigo-500 to-blue-500;
+}
+
+input:checked + .slider::before {
+  @apply translate-x-full;
+}
