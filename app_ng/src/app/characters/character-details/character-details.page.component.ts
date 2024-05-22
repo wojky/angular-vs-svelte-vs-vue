@@ -4,12 +4,12 @@ import {
   input,
   signal,
 } from "@angular/core";
-import { Character } from "../characters.page.component";
+import { Character } from "../Character.model";
+import { SpinnerLoaderComponent } from "../../shared/loader.component";
 
 @Component({
   selector: "app-character-details-page",
   standalone: true,
-  imports: [],
   template: `
     <div class="flex flex-col bg-gray-100 p-4">
       @if(character(); as character) {
@@ -37,10 +37,12 @@ import { Character } from "../characters.page.component";
           <p><strong>Episodes count:</strong> {{ character.episode.length }}</p>
         </div>
       </div>
+      } @else {
+      <app-spinner-loader />
       }
     </div>
   `,
-  styles: ``,
+  imports: [SpinnerLoaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CharacterDetailsPageComponent {

@@ -1,4 +1,4 @@
-import { Character } from "../../characters/characters.page.component";
+import { Character } from "../../characters/Character.model";
 
 export function createCard(character: Character, cardId: number) {
   return {

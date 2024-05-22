@@ -5,7 +5,7 @@ export let users: Record<string, any> = {
     uuid: randomUUID(),
     email: "test@test.pl",
     subscribed: true,
-    watchList: [],
+    watchList: [2],
     password: "testtest",
   },
 };

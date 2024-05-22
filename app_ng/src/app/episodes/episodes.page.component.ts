@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   Directive,
   TemplateRef,
@@ -7,12 +8,12 @@ import {
   effect,
   inject,
   input,
-  viewChild,
 } from "@angular/core";
-import { EpisodesApiService } from "./episodes.api.service";
+import { Episode, EpisodesApiService } from "./episodes.api.service";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { map } from "rxjs";
-import { NgTemplateOutlet } from "@angular/common";
+import { DatePipe, NgTemplateOutlet } from "@angular/common";
+import { UserStateService } from "../auth/state/user.state.service";
 
 export type TableColumnDefinition<T> = {
   order: number;
@@ -40,7 +41,9 @@ export class CellTemplateDirective {
     [style.--num-columns]="config().length"
   >
     @for(column of config(); track column.name) {
-    <div class="grid-item bg-teal-500">{{ column.title || column.name }}</div>
+    <div class="grid-item bg-indigo-100 text-indigo-800 font-semibold">
+      {{ column.title || column.name }}
+    </div>
 
     }
     <!--  -->
@@ -51,7 +54,10 @@ export class CellTemplateDirective {
     <div class="grid-item">
       @if(column.customTemplate) {
       <ng-container
-        *ngTemplateOutlet="findTemplate(column.customTemplate)"
+        *ngTemplateOutlet="
+          findTemplate(column.customTemplate);
+          context: { $implicit: value }
+        "
       ></ng-container>
       } @else {
       {{
@@ -92,12 +98,6 @@ export class TableComponent<T extends { id: number }> {
 
   template = contentChildren(CellTemplateDirective);
 
-  ef = effect((_) => {
-    const templates = this.template();
-
-    console.dir(templates[0].cellTemplate());
-  });
-
   findTemplate(name: string) {
     return (
       this.template().find((t) => t.cellTemplate() === name)?.template || null
@@ -108,11 +108,26 @@ export class TableComponent<T extends { id: number }> {
 @Component({
   selector: "app-episodes-page",
   standalone: true,
-  imports: [TableComponent, CellTemplateDirective],
+  imports: [TableComponent, CellTemplateDirective, DatePipe],
   template: `
     @if(episodes(); as episodes) {
     <app-table [data]="episodes.results" [config]="config">
-      <button *cellTemplate="'preview'">preview</button>
+      <div *cellTemplate="'preview'; let episode">
+        @if(user();as u) {
+        <label class="switch">
+          <input
+            type="checkbox"
+            (change)="toggleWatchList(episode)"
+            [checked]="onWatchList(u.watchList, episode)"
+          />
+          <span class="slider"></span>
+        </label>
+        } @else { Login if you want to wishlist this episode }
+      </div>
+
+      <div *cellTemplate="'airdate'; let episode">
+        <span class="text-sm"> {{ episode.airdate }}</span>
+      </div>
     </app-table>
     }
   `,
@@ -120,11 +135,19 @@ export class TableComponent<T extends { id: number }> {
 
 
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EpisodesPageComponent {
   private backend = inject(EpisodesApiService);
+  user = inject(UserStateService).value;
 
-  private previewTemplate = viewChild.required<TemplateRef<any>>("preview");
+  onWatchList(wishList: number[], episode: Episode) {
+    return wishList.includes(episode.id);
+  }
+
+  toggleWatchList(episode: Episode) {
+    console.log(episode);
+  }
 
   config: TableColumnDefinition<{
     id: number;
@@ -133,14 +156,14 @@ export class EpisodesPageComponent {
     episodeCode: string;
     characters: string[];
   }>[] = [
-    {
-      order: 1,
-      name: "id",
-    },
-    {
-      order: 2,
-      name: "name",
-    },
+    // {
+    //   order: 1,
+    //   name: "id",
+    // },
+    // {
+    //   order: 2,
+    //   name: "name",
+    // },
     {
       order: 3,
       name: "episodeCode",
@@ -158,6 +181,7 @@ export class EpisodesPageComponent {
     {
       order: 5,
       name: "airdate",
+      customTemplate: "airdate",
     },
     {
       order: 6,

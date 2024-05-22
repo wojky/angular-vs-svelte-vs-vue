@@ -25,11 +25,6 @@ export const routes: Routes = [
     path: "auth",
     loadChildren: async () => (await import("./auth/auth.routes")).routes,
   },
-  // {
-  //   path: "game",
-  //   loadChildren: async () =>
-  //     (await import("./memo-game/memo-game.routes")).routes,
-  // },
   {
     path: "",
     redirectTo: "characters",

@@ -1,6 +1,5 @@
 import { ApplicationConfig } from "@angular/core";
 import { provideRouter, withComponentInputBinding } from "@angular/router";
-
 import { routes } from "./app.routes";
 import {
   HttpInterceptorFn,
@@ -8,13 +7,14 @@ import {
   provideHttpClient,
   withInterceptors,
 } from "@angular/common/http";
-import { catchError, of } from "rxjs";
+import { tap } from "rxjs";
 
-const interceptor: HttpInterceptorFn = (req, next) => {
+const logger: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
-    catchError((err) => {
-      console.warn(err);
-      return of({} as HttpResponse<any>);
+    tap((res) => {
+      if (res instanceof HttpResponse) {
+        console.log(req.urlWithParams);
+      }
     })
   );
 };
@@ -22,6 +22,6 @@ const interceptor: HttpInterceptorFn = (req, next) => {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([interceptor])),
+    provideHttpClient(withInterceptors([logger])),
   ],
 };

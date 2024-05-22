@@ -1,17 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
-  selector: 'app-watchlist.page',
+  selector: "app-watchlist.page",
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      watchlist.page works!
-    </p>
-  `,
+  template: ` <p class="text-5xl">👀</p> `,
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WatchlistPageComponent {
-
-}
+export class WatchlistPageComponent {}

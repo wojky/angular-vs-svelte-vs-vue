@@ -27,6 +27,8 @@ import { Component, input, output } from "@angular/core";
         Next
       </button>
     </div>
+
+    <ng-content />
   `,
 })
 export class PaginationComponent {
