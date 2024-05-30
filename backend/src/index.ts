@@ -2,7 +2,6 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { jwt, sign, verify } from "hono/jwt";
 import { users } from "./db-mock";
-import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 
 export function setExpirationTime() {
@@ -27,8 +26,24 @@ app.use(
   })
 );
 
-app.post("/watchlists", (c) => {
-  return c.text("watchlists");
+app.post("/watchlists/:episodeId/toggle", (c) => {
+  console.log(c.get("jwtPayload"));
+
+  const episodeId = +c.req.param("episodeId");
+
+  const watchList = users["test@test.pl"].watchList;
+
+  if (watchList.some((id: number) => id === episodeId)) {
+    users["test@test.pl"].watchList = watchList.filter(
+      (id: number) => id !== episodeId
+    );
+  } else {
+    users["test@test.pl"].watchList.push(episodeId);
+  }
+
+  return c.json({
+    watchList: users["test@test.pl"].watchList,
+  });
 });
 
 app.post("/verify", async (c) => {
@@ -36,7 +51,7 @@ app.post("/verify", async (c) => {
 
   try {
     const jwtData = await verify(token, JWT_PRIVATE_KEY);
-    console.log({ jwtData });
+    // console.log({ jwtData });
     const isExpired = jwtData.exp < new Date().getTime();
 
     if (isExpired) {
@@ -68,8 +83,22 @@ app.post("/verify", async (c) => {
   }
 });
 
+app.patch("/settings", (c) => {
+  return c.json({});
+});
+
 app.post("/auth/logout", (c) => {
   return c.json(null);
+});
+
+app.post("/auth/reset", (c) => {
+  c.status(201);
+  return c.json({});
+});
+
+app.post("/auth/register", (c) => {
+  c.status(201);
+  return c.json({});
 });
 
 app.post("/auth/login", async (c) => {

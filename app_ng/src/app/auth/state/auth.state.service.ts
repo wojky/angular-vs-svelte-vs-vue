@@ -1,4 +1,12 @@
-import { Injectable, effect, inject, signal } from "@angular/core";
+import {
+  EnvironmentInjector,
+  Injectable,
+  Injector,
+  createEnvironmentInjector,
+  effect,
+  inject,
+  signal,
+} from "@angular/core";
 import { AuthApiService } from "../services/auth.api.service";
 import { UserStateService } from "./user.state.service";
 import { Router } from "@angular/router";
@@ -70,6 +78,7 @@ export class AuthStateService {
   logout() {
     this.authApi.logout().subscribe(() => {
       localStorage.removeItem("token");
+
       this.userState.setUser(null);
       this.state.set({ status: AuthStateStatus.NOT_AUTHENTICATED });
     });

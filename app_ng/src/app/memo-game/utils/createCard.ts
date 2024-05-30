@@ -1,4 +1,4 @@
-import { Character } from "../../characters/Character.model";
+import { Character } from "../../characters/model/character.model";
 
 export function createCard(character: Character, cardId: number) {
   return {

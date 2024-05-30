@@ -1,4 +1,4 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable, effect, signal } from "@angular/core";
 
 export type UserInfo = {
   role: string;

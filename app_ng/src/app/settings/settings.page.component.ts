@@ -6,6 +6,10 @@ import {
   ReactiveFormsModule,
 } from "@angular/forms";
 import { UserStateService } from "../auth/state/user.state.service";
+import {
+  SettingsApiService,
+  UpdateSettingsPayload,
+} from "./settings.api.service";
 
 @Component({
   selector: "app-setting.page",
@@ -96,6 +100,7 @@ import { UserStateService } from "../auth/state/user.state.service";
 export class SettingsPageComponent {
   private user = inject(UserStateService).value;
   private fb = inject(NonNullableFormBuilder);
+  private backend = inject(SettingsApiService);
 
   settingsForm = this.fb.group({
     currentPassword: ["", [Validators.required]],
@@ -120,9 +125,8 @@ export class SettingsPageComponent {
   }
 
   onSubmit(): void {
-    if (this.settingsForm.valid) {
-      // Perform update settings logic here
-      console.log("Form Submitted", this.settingsForm.value);
-    }
+    this.backend
+      .updateSettings(this.settingsForm.getRawValue())
+      .subscribe(() => {});
   }
 }

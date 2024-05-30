@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from "@angular/core";
 import {
   AbstractControl,
   NonNullableFormBuilder,
@@ -25,6 +30,10 @@ export function passwordMatchValidator(ctrl: AbstractControl) {
       <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">
         Register
       </h2>
+
+      @if(displaySuccessRegisterMessage()) {
+      <p>Great! Now go to your mailbox and confirm sign up!</p>
+      } @else {
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <div class="mb-4">
           <label for="email" class="block text-gray-700">Email</label>
@@ -100,6 +109,7 @@ export function passwordMatchValidator(ctrl: AbstractControl) {
           >
         </div>
       </form>
+      }
     </div>
   `,
   styles: ``,
@@ -108,6 +118,8 @@ export function passwordMatchValidator(ctrl: AbstractControl) {
 export class RegisterPageComponent {
   private authApi = inject(AuthApiService);
   private fb = inject(NonNullableFormBuilder);
+
+  displaySuccessRegisterMessage = signal(false);
 
   registerForm = this.fb.group({
     email: this.fb.control("", [Validators.required, Validators.email]),
@@ -134,6 +146,10 @@ export class RegisterPageComponent {
 
     const { email, password, subscribeNewsletter } =
       this.registerForm.getRawValue();
-    this.authApi.register(email, password, subscribeNewsletter);
+    this.authApi
+      .register(email, password, subscribeNewsletter)
+      .subscribe(() => {
+        this.displaySuccessRegisterMessage.set(true);
+      });
   }
 }

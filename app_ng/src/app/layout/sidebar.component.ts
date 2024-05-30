@@ -27,7 +27,7 @@ import { UserStateService } from "../auth/state/user.state.service";
             [routerLinkActiveOptions]="{ exact: true }"
             class="hover:text-indigo-400"
           >
-            Episodes 👷‍♂️
+            Episodes
           </a>
         </li>
         @if(user(); as u) {
@@ -62,10 +62,7 @@ import { UserStateService } from "../auth/state/user.state.service";
           >Settings</a
         >
         <p class="mt-4">{{ u.email }}</p>
-        <button
-          (click)="authService.logout()"
-          class="mt-2 bg-gradient-to-r from-red-500 to-red-700 text-white px-4 py-2 rounded shadow-lg transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500"
-        >
+        <button (click)="authService.logout()" class="mt-2 btn--secondary">
           Logout
         </button>
 

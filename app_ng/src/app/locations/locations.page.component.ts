@@ -34,7 +34,7 @@ export type SeriesLocation = {
       <div class="card grow text-center">
         <p class="font-semibold">{{ location.name }}</p>
         <span class="chip my-2">{{ location.type }}</span>
-        <p>{{ location.dimension }}</p>
+        <p>🪐 {{ location.dimension }}</p>
         <p class="mt-2 font-bold">🧍‍♂️🧍‍♀️ {{ location.residents.length }}</p>
       </div>
       }

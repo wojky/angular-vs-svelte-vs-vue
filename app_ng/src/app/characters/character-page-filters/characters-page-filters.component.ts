@@ -1,7 +1,14 @@
-import { Component, DestroyRef, inject, output } from "@angular/core";
-import { NonNullableFormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { Component, DestroyRef, inject, input, output } from "@angular/core";
+import {
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+} from "@angular/forms";
 import { debounceTime, distinctUntilChanged } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Pageable } from "../../shared/types/Pageable.model";
+import { CharactersFilters } from "../services/characters.state.service";
 
 @Component({
   selector: "app-characters-page-filters",
@@ -56,14 +63,21 @@ export class CharactersPageFiltersComponent {
   private fb = inject(NonNullableFormBuilder);
   private destroyRef = inject(DestroyRef);
 
+  defaults = input.required<CharactersFilters>();
+
   filtersChanged = output<Partial<{ status: string; searchTerm: string }>>();
 
-  charactersFiltersForm = this.fb.group({
-    status: this.fb.control(""),
-    searchTerm: this.fb.control(""),
-  });
+  charactersFiltersForm!: FormGroup<{
+    status: FormControl<string>;
+    searchTerm: FormControl<string>;
+  }>;
 
   ngOnInit() {
+    this.charactersFiltersForm = this.fb.group({
+      status: this.fb.control(this.defaults().status),
+      searchTerm: this.fb.control(this.defaults().searchTerm),
+    });
+
     this.charactersFiltersForm.controls.searchTerm.valueChanges
       .pipe(
         debounceTime(300),

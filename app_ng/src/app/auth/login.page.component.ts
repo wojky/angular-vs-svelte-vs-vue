@@ -53,6 +53,7 @@ import { AuthStateService } from "./state/auth.state.service";
           Password is required
         </div>
       </div>
+      <a routerLink="/auth/reset" class="link mb-4 block">Password lost?</a>
       <div class="flex items-center justify-between mb-6">
         <button type="submit" class="btn--primary">Login</button>
         <a routerLink="/auth/register" class="link">Register</a>

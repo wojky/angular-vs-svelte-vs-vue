@@ -1,4 +1,6 @@
-import { Routes } from "@angular/router";
+import { inject } from "@angular/core";
+import { Router, Routes } from "@angular/router";
+import { AuthStateService } from "./auth/state/auth.state.service";
 
 export const routes: Routes = [
   {
@@ -24,6 +26,20 @@ export const routes: Routes = [
   {
     path: "auth",
     loadChildren: async () => (await import("./auth/auth.routes")).routes,
+    canMatch: [
+      () => {
+        const auth = inject(AuthStateService).value;
+        const router = inject(Router);
+
+        if (auth().status === "AUTHENTICATED") {
+          router.navigate(["/"]);
+
+          return false;
+        } else {
+          return true;
+        }
+      },
+    ],
   },
   {
     path: "",

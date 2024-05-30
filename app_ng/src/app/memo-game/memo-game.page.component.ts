@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { Router, RouterOutlet } from "@angular/router";
 import { Observable, map, take } from "rxjs";
-import { Character } from "../characters/Character.model";
+import { Character } from "../characters/model/character.model";
 import { shuffleArray } from "./utils/shuffleArray";
 import { Card } from "./game/play-memo-game.page.component";
 import { getCharacterCountByGameSize } from "./utils/getCharacterCountByGameSize";

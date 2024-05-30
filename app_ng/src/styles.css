@@ -41,6 +41,10 @@ body, html {
     @apply bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-4 py-2 rounded shadow-lg transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500;
   }
 
+  .btn--secondary {
+    @apply bg-gradient-to-r from-red-500 to-red-700 text-white px-4 py-2 rounded shadow-lg transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500;
+  }
+
   .link {
     @apply text-indigo-500 hover:underline cursor-pointer
   }

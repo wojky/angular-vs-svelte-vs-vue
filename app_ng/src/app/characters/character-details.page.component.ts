@@ -1,11 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
+  inject,
   input,
   signal,
 } from "@angular/core";
-import { Character } from "../Character.model";
-import { SpinnerLoaderComponent } from "../../shared/loader.component";
+import { SpinnerLoaderComponent } from "../shared/loader.component";
+import { CharactersService } from "./services/characters.service";
+import { Character } from "./model/character.model";
 
 @Component({
   selector: "app-character-details-page",
@@ -47,14 +50,18 @@ import { SpinnerLoaderComponent } from "../../shared/loader.component";
 })
 export class CharacterDetailsPageComponent {
   characterId = input.required<string>({ alias: "id" });
+  service = inject(CharactersService);
 
   character = signal<Character | null>(null);
 
-  ngOnInit() {
-    fetch(`https://rickandmortyapi.com/api/character/${this.characterId()}`)
-      .then((res) => res.json())
-      .then((c) => {
-        this.character.set(c);
-      });
+  constructor() {
+    effect(
+      () => {
+        this.service.getCharacterById(this.characterId()).then((c) => {
+          this.character.set(c);
+        });
+      },
+      { allowSignalWrites: true }
+    );
   }
 }

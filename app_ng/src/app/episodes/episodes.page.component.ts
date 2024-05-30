@@ -5,15 +5,13 @@ import {
   TemplateRef,
   ViewContainerRef,
   contentChildren,
-  effect,
   inject,
   input,
 } from "@angular/core";
 import { Episode, EpisodesApiService } from "./episodes.api.service";
-import { toSignal } from "@angular/core/rxjs-interop";
-import { map } from "rxjs";
 import { DatePipe, NgTemplateOutlet } from "@angular/common";
 import { UserStateService } from "../auth/state/user.state.service";
+import { EpisodesService } from "./episodes.service";
 
 export type TableColumnDefinition<T> = {
   order: number;
@@ -40,7 +38,7 @@ export class CellTemplateDirective {
     class="grid-container"
     [style.--num-columns]="config().length"
   >
-    @for(column of config(); track column.name) {
+    @for(column of config(); track $index) {
     <div class="grid-item bg-indigo-100 text-indigo-800 font-semibold">
       {{ column.title || column.name }}
     </div>
@@ -50,7 +48,7 @@ export class CellTemplateDirective {
 
     @for(value of data(); track value.id) {
     <!--  -->
-    @for(column of config(); track column.name) {
+    @for(column of config(); track $index) {
     <div class="grid-item">
       @if(column.customTemplate) {
       <ng-container
@@ -111,7 +109,7 @@ export class TableComponent<T extends { id: number }> {
   imports: [TableComponent, CellTemplateDirective, DatePipe],
   template: `
     @if(episodes(); as episodes) {
-    <app-table [data]="episodes.results" [config]="config">
+    <app-table [data]="episodes" [config]="config">
       <div *cellTemplate="'preview'; let episode">
         @if(user();as u) {
         <label class="switch">
@@ -122,7 +120,12 @@ export class TableComponent<T extends { id: number }> {
           />
           <span class="slider"></span>
         </label>
-        } @else { Login if you want to wishlist this episode }
+        } @else {
+
+        <p class="font-semibold text-xs">
+          Login if you want to wishlist this episode
+        </p>
+        }
       </div>
 
       <div *cellTemplate="'airdate'; let episode">
@@ -138,7 +141,7 @@ export class TableComponent<T extends { id: number }> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EpisodesPageComponent {
-  private backend = inject(EpisodesApiService);
+  private service = inject(EpisodesService);
   user = inject(UserStateService).value;
 
   onWatchList(wishList: number[], episode: Episode) {
@@ -146,7 +149,7 @@ export class EpisodesPageComponent {
   }
 
   toggleWatchList(episode: Episode) {
-    console.log(episode);
+    this.service.toggleWatchList(episode);
   }
 
   config: TableColumnDefinition<{
@@ -156,63 +159,48 @@ export class EpisodesPageComponent {
     episodeCode: string;
     characters: string[];
   }>[] = [
-    // {
-    //   order: 1,
-    //   name: "id",
-    // },
-    // {
-    //   order: 2,
-    //   name: "name",
-    // },
+    {
+      order: 1,
+      name: "id",
+    },
+    {
+      order: 2,
+      name: "name",
+      title: "Name",
+    },
     {
       order: 3,
       name: "episodeCode",
-      title: "season",
+      title: "Season",
       computeValue: ({ episodeCode }) =>
         episodeCode.slice(0, episodeCode.indexOf("E")),
     },
     {
       order: 4,
       name: "episodeCode",
-      title: "episode",
+      title: "Episode",
       computeValue: ({ episodeCode }) =>
         episodeCode.slice(episodeCode.indexOf("E")),
     },
     {
       order: 5,
       name: "airdate",
+      title: "Airdate",
       customTemplate: "airdate",
     },
     {
       order: 6,
       name: "characters",
-      computeValue: (item) => item.characters.length.toString(),
+      title: "Characters",
+      computeValue: (item) => `🧍‍♂️🧍‍♀️${item.characters.length.toString()}`,
     },
     {
       order: 7,
       name: "characters",
-      title: "preview",
+      title: " ",
       customTemplate: "preview",
     },
   ];
 
-  episodes = toSignal(
-    this.backend.getAll().pipe(
-      map((response) => {
-        return {
-          ...response,
-          results: response.results.map((e) => {
-            return {
-              id: e.id,
-              name: e.name,
-              airdate: e.air_date,
-              episodeCode: e.episode,
-              characters: e.characters,
-            };
-          }),
-        };
-      })
-    ),
-    { initialValue: null }
-  );
+  episodes = this.service.episodesDataSource;
 }

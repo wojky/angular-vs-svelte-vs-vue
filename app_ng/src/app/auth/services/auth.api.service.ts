@@ -24,11 +24,15 @@ export class AuthApiService {
   }
 
   register(email: string, password: string, subscription: boolean) {
-    return this.http.post<void>("", { email, password, subscription });
+    return this.http.post<void>("http://localhost:3000/auth/register", {
+      email,
+      password,
+      subscription,
+    });
   }
 
   resetCredentials(email: string) {
-    return this.http.post<void>("", { email });
+    return this.http.post<void>("http://localhost:3000/auth/reset", { email });
   }
 
   verifyToken(

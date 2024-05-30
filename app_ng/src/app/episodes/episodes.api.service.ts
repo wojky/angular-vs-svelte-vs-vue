@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { combineLatest, map } from "rxjs";
+import { combineLatest, map, tap } from "rxjs";
 
 export type ApiResults<T> = {
   info: {
@@ -27,6 +27,13 @@ export type Episode = {
 })
 export class EpisodesApiService {
   private http = inject(HttpClient);
+
+  toggleWatchList(episodeId: number) {
+    return this.http.post<{ watchList: number[] }>(
+      `http://localhost:3000/watchlists/${episodeId}/toggle`,
+      {}
+    );
+  }
 
   getAll() {
     return combineLatest([
