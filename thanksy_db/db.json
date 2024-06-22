@@ -1,0 +1,19 @@
+{
+  "organisations": [
+    {
+      "id": 1,
+      "staffIds": [1],
+      "imageUrl": "/org_1.jpg"
+    }
+  ],
+  "persons": [
+    {
+      "id": 1,
+      "organisationId": 1,
+      "name": "Ray Donovan",
+      "description": "Simple guy to want just enjoy the life",
+      "purpose": "Simple dream to catch",
+      "imageUrl": "/user_1.jpg"
+    }
+  ]
+}

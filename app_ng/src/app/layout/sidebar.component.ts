@@ -68,7 +68,7 @@ import { UserStateService } from "../auth/state/user.state.service";
 
         } @else {
         <a
-          routerLink="auth/login"
+          routerLink="auth"
           routerLinkActive="font-semibold text-indigo-400"
           class="hover:text-indigo-400"
           >Login</a

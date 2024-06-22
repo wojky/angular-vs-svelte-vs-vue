@@ -115,7 +115,7 @@ export class SettingsPageComponent {
     confirmNewPassword: ["", [Validators.required]],
     subscribeNewsletter: [this.user()?.subscribed],
   });
-  userEmail: string = "user@example.com"; // This should be fetched from the user's data
+  userEmail = this.user()?.email;
 
   passwordMatchValidator(form: typeof this.settingsForm) {
     return form.controls.newPassword.value ===

@@ -31,6 +31,8 @@ export const routes: Routes = [
         const auth = inject(AuthStateService).value;
         const router = inject(Router);
 
+        console.log(auth());
+
         if (auth().status === "AUTHENTICATED") {
           router.navigate(["/"]);
 

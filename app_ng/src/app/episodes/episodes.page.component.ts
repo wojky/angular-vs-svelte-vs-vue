@@ -159,10 +159,10 @@ export class EpisodesPageComponent {
     episodeCode: string;
     characters: string[];
   }>[] = [
-    {
-      order: 1,
-      name: "id",
-    },
+    // {
+    //   order: 1,
+    //   name: "id",
+    // },
     {
       order: 2,
       name: "name",
